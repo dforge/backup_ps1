@@ -71,6 +71,7 @@ $colors  = @{
     10  = "green";
     12  = "Magenta";
     13  = "white";
+    14  = "yellow";
     255 = "Black";
 };
 
@@ -221,6 +222,10 @@ foreach($source in $sources.sources) {
     ###
     ###
     if ($compress) {
+        # #------------------------------------------
+        LogWrite "Compress required" $colors[13];
+
+        #
         $compress       = "-mx5";
         $compressed     = $compressed + 1;
     }
@@ -230,6 +235,9 @@ foreach($source in $sources.sources) {
     }
 
     if ($password) {
+        # #------------------------------------------
+        LogWrite "Password protection required" $colors[13];
+
         #
         $password   = "-p$($password) -mhe=on";
         $protected  = $protected + 1;
@@ -241,7 +249,10 @@ foreach($source in $sources.sources) {
 
     ###
     ###
-    if ($accepted) {        
+    if ($accepted) {
+        # #------------------------------------------
+        LogWrite "$($destination) validated running zipper" $colors[13];
+
         #
         $processed      =   $processed + 1;
         $destination    =   "$($destination)\$($name).7z";
@@ -273,7 +284,7 @@ foreach($source in $sources.sources) {
     ###
     if($accepted -and $executed -and $verify) {
         # #------------------------------------------
-        LogWrite "$($destination) verified requested" "white";
+        LogWrite "$($destination) verified requested" $colors[13];
 
         #
         $switches       = "t";
