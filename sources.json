@@ -5,6 +5,9 @@
             "password": "password",
             "compress": false,
             "verify": false
+        },
+        {
+            "path": "<DEFAULT_PATH_WITHOUT_OPTIONS_FOR_TARGET_REMEMBER_ABOUT_DOUBLE_BACKSLASHES \\>"
         }
     ],
     "password": "",
