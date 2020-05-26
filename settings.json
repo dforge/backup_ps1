@@ -1,0 +1,25 @@
+{
+    "logging": true,
+    "logpath": "script",
+    "zipper": "C:\\Program Files\\7-Zip\\7z.exe",
+    "light": "9119AE7500AA5CCCF26A0F18FD8454245347E3C01DABBA56A93DBAAAB86535E62B1357170758F3B3445B8359E7DD5D37737318A5D8A6047C499D32D5B64126FC",
+    "secure_string": "CBE0A8851B964389EFC3C7FCA5534A182731A5BF2B90F10CACBA5FE729FD939A893D4A6B90F4B0611CCC5B21BF64E37EC86A7C2B8486B0EDE6E44DAF0FF9925D",
+    "providers": [
+        {
+            "name": "yandex",
+            "token": "<TOKEN>"
+        },
+        {
+            "name": "dropbox",
+            "token": "<TOKEN>"
+        },
+        {
+            "name": "mailru",
+            "token": "<TOKEN>"
+        },
+        {
+            "name": "local",
+            "path": "<DEFAULT_PATH_FOR_BACKUPS REMEMBER ABOUT DOUBLE BACKSLASHES \\>"
+        }
+    ]
+}

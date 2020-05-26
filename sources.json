@@ -1,0 +1,13 @@
+{
+    "sources": [
+        {
+            "path": "<DEFAULT_PATH_FOR_TARGET_REMEMBER_ABOUT_DOUBLE_BACKSLASHES \\>",
+            "password": "password",
+            "compress": false,
+            "verify": false
+        }
+    ],
+    "password": "",
+    "compress": false,
+    "verify": false
+}
