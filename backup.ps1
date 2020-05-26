@@ -41,6 +41,13 @@ $script_path            = $PSScriptRoot;
 $script_file            = "$($script_path)\$($script_name)";
 $sources                = "$($script_path)\sources.json";
 $settings               = "$($script_path)\settings.json";
+$processed              = 0;
+$ignored                = 0;
+$verifed                = 0;
+$compressed             = 0;
+$protected              = 0;
+$faulted                = 0;
+$total                  = 0;
 
 ###
 ###
@@ -62,6 +69,8 @@ $colors  = @{
     8   = "DarkRed";
     9   = "white";
     10  = "green";
+    12  = "Magenta";
+    13  = "white";
     255 = "Black";
 };
 
@@ -130,7 +139,7 @@ if ($settings.secure_string -ne (Get-FileHash -Path $script_file -Algorithm SHA5
 }
 
 #------------------------------------------
-LogWrite "$($script_name) everything is going well, starting sources processing" "white";
+LogWrite "$($script_name) everything is going well, starting sources processing. source queue now: $($sources.sources.Count)" "white";
 
 
 ###
@@ -157,6 +166,7 @@ foreach($source in $sources.sources) {
     $switches       = "a";
     $executed       = $FALSE;
     $status         = "`n---`nThe job not running: LASTEXITCODE: $($LASTEXITCODE)";
+    $total          = $total + 1;
 
     ###
     ###
@@ -166,6 +176,7 @@ foreach($source in $sources.sources) {
 
         #
         $accepted = $FALSE;
+        $ignored  = $ignored + 1;
     };
 
     if ($accepted -eq $TRUE -and -not $destination) {
@@ -174,20 +185,25 @@ foreach($source in $sources.sources) {
 
         #
         $accepted = $FALSE;
+        $ignored  = $ignored + 1;
     };
 
     if ($accepted -eq $TRUE -and -not (Test-Path -Path $source.path)) {
         #------------------------------------------
         LogWrite "$($script_name) $($source.path) not found: backup will not be created..." "yellow";
 
+        #
         $accepted = $FALSE;
+        $ignored  = $ignored + 1;
     };
 
     if (-not (Test-Path -Path $destination)) {
         #------------------------------------------
         LogWrite "$($script_name) $($destination) path not found or access denied: backup will not be created..." "yellow";
 
+        #
         $accepted = $FALSE;
+        $ignored  = $ignored + 1;
     };
 
     ###
@@ -205,7 +221,8 @@ foreach($source in $sources.sources) {
     ###
     ###
     if ($compress) {
-        $compress = "-mx5";
+        $compress       = "-mx5";
+        $compressed     = $compressed + 1;
     }
 
     if (-not $compress) {
@@ -213,17 +230,20 @@ foreach($source in $sources.sources) {
     }
 
     if ($password) {
-        $password = "-p$($password) -mhe=on";
+        #
+        $password   = "-p$($password) -mhe=on";
+        $protected  = $protected + 1;
     }
 
     if (!$password) {
-        $password = "";
+        $password   = "";
     }
 
     ###
     ###
     if ($accepted) {        
         #
+        $processed      =   $processed + 1;
         $destination    =   "$($destination)\$($name).7z";
         $result         = & $settings.zipper $switches $compress $password $destination $source.path;
 
@@ -234,6 +254,12 @@ foreach($source in $sources.sources) {
         $status         = $result + $messages[$LASTEXITCODE] + $LASTEXITCODE;
         $color          = $colors[$LASTEXITCODE];
         $executed       = $TRUE;
+    
+        #
+        if ($LASTEXITCODE -ne 0) {
+            $faulted    = $faulted + 1;
+            $processed  = $processed - 1;
+        };
     };
 
     ###
@@ -254,10 +280,14 @@ foreach($source in $sources.sources) {
         $result         = & $settings.zipper $switches $password $destination;
         $status         = $result + $messages[$LASTEXITCODE] + $LASTEXITCODE;
         $color          = $colors[$LASTEXITCODE];
+        $verifed        = $verifed + 1;
 
         # #------------------------------------------
         LogWrite $status $color;
     };
 };
+
+#------------------------------------------
+LogWrite "$($script_name) Operation complited. Total backup jobs: $($total). Processed: $($processed). Faulted: $($faulted). Ignored: $($ignored). Exiting..." $colors[12];
 
 Exit;
