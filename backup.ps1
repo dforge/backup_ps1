@@ -25,10 +25,10 @@ function LogWrite {
     if ($settings.logging -and (Test-Path -Path $settings.logpath)) {
         ###
         "$((Get-Date).tostring("dd-MM-yyyy hh:mm:ss")) | $color | $logstring" | Out-File $settings.logpath -Append;
-
-        ###
-        Write-Host (Get-Date).tostring("dd-MM-yyyy hh:mm:ss") $logstring -ForegroundColor $color;
     };
+
+    ###
+    Write-Host (Get-Date).tostring("dd-MM-yyyy hh:mm:ss") $logstring -ForegroundColor $color;
 };
 
 
