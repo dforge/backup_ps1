@@ -147,7 +147,7 @@ foreach($source in $sources.sources) {
 
     ###
     ###
-    $name           = "$((Get-Date).tostring("yyyy-MM-dd_hh-mm-ss"))_$(Get-Random -Minimum 1 -Maximum 99999999)";
+    $name           = "$((Get-Date).tostring("yyyy-MM-dd_hh-mm-ss"))";
     $accepted       = $TRUE;
     $invalidChars   = [io.path]::GetInvalidFileNamechars();
     $compress       = if ($source.compress) { $source.compress } else { $sources.compress };
@@ -193,12 +193,12 @@ foreach($source in $sources.sources) {
     ###
     ###
     if(-not $source.name -and $accepted -eq $TRUE) {
-        $name = "$((Split-Path $source.path -leaf))_$($name)";
+        $name = "$($name)_$((Split-Path $source.path -leaf))_$(Get-Random -Minimum 1 -Maximum 99999999)";
         $name = ($name.ToString() -replace "[$invalidChars]","_");
     };
 
     if($source.name -and $accepted -eq $TRUE) {
-        $name = "$($source.name)_$($name)";
+        $name = "$($name)_$($source.name)_$(Get-Random -Minimum 1 -Maximum 99999999)";
         $name = ($name.ToString() -replace "[$invalidChars]","_");
     };
 
