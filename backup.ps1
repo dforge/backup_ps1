@@ -239,7 +239,7 @@ foreach($source in $sources.sources) {
         LogWrite "Password protection required" $colors[13];
 
         #
-        $password   = "-p$($password) -mhe=on";
+        $password   = "-p$($password)";
         $protected  = $protected + 1;
     }
 
