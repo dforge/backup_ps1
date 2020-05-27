@@ -18,7 +18,7 @@ git checkout
 git pull
 ```
 
-### VMware loginsight intergraion
+### VMware loginsight integration
 ```sh
 [parser|backup_ps1_parser]
 base_parser=csv
