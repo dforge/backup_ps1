@@ -17,3 +17,19 @@ git checkout
 ```sh
 git pull
 ```
+
+### VMware loginsight intergraion
+```sh
+[parser|backup_ps1_parser]
+base_parser=csv
+delimiter=|
+fields=datetime,sevirity,log_message
+debug=no
+```
+
+```sh
+[filelog|backup_ps1_filelog]
+directory=<backup_ps1 log file location>
+include=*.txt
+parser=backup_ps1_parser
+```
