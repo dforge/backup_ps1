@@ -48,6 +48,7 @@ $compressed             = 0;
 $protected              = 0;
 $faulted                = 0;
 $total                  = 0;
+$total_size             = 0;
 
 ###
 ###
@@ -251,15 +252,17 @@ foreach($source in $sources.sources) {
     ###
     if ($accepted) {
         # #------------------------------------------
-        LogWrite "$($destination) validated running zipper" $colors[13];
-
+        LogWrite "$($destination) validation passed. Running zipper" $colors[13];
+        
         #
+        $source_size    =   (Get-ChildItem $source.path | Measure-Object -Property Length -sum).Sum;
+        $total_size     =   $total_size + $source_size;
         $processed      =   $processed + 1;
         $destination    =   "$($destination)\$($name).7z";
         $result         = & $settings.zipper $switches $compress $password $destination $source.path;
 
         # #------------------------------------------
-        LogWrite "$($destination) starting zipper" "white";
+        LogWrite "$($destination) archive size is $([math]::Round(($source_size / 1Mb),2)) Mb. Starting zipper" "white";
 
         #
         $status         = $result + $messages[$LASTEXITCODE] + $LASTEXITCODE;
@@ -278,13 +281,16 @@ foreach($source in $sources.sources) {
     if ($accepted -and $executed) {
         # #------------------------------------------
         LogWrite $status $color;
+
+        # #------------------------------------------
+        LogWrite "Destination archive size is $([math]::Round((((Get-ChildItem $destination| Measure-Object -Property Length -sum).Sum) / 1Mb),2)) Mb" $color;
     };
 
     ###
     ###
     if($accepted -and $executed -and $verify) {
         # #------------------------------------------
-        LogWrite "$($destination) verified requested" $colors[13];
+        LogWrite "$($destination) verification requested" $colors[13];
 
         #
         $switches       = "t";
@@ -299,6 +305,6 @@ foreach($source in $sources.sources) {
 };
 
 #------------------------------------------
-LogWrite "$($script_name) Operation complited. Total backup jobs: $($total). Processed: $($processed). Faulted: $($faulted). Ignored: $($ignored). Exiting..." $colors[12];
+LogWrite "$($script_name) Operation complited. Total backup jobs: $($total). Total size $([math]::Round(($total_size / 1Mb),2)) Mb. Processed: $($processed). Faulted: $($faulted). Ignored: $($ignored). Exiting..." $colors[12];
 
 Exit;
